@@ -1,0 +1,72 @@
+<!-- Controls -->
+<div class="absolute mt-4 ml-4 w-96 bg-white p-4 rounded">
+    <div>Simulation: Randomized Rumor Spreading</div>
+    <div class="flex flex-col" [formGroup]="formGroup">
+      <mat-form-field appearance="standard">
+        <mat-label>Node Count</mat-label>
+        <input matInput type="number" placeholder="Node Count" max="5000" autocomplete="off" formControlName="amount">
+      </mat-form-field>
+      <mat-form-field appearance="standard">
+        <mat-label>Information Spreading Technique</mat-label>
+        <mat-select formControlName="informationMethod">
+          <mat-option *ngFor="let option of typeSelectOption" [value]="option.key">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="onStart()" [disabled]="!formGroup.valid">Start Simulation</button>
+    </div>
+    <div class="flex-row flex space-x-4 p-4 " *ngIf="simulationResult.length">
+      <div class="flex flex-col item-center justify-center whitespace-nowrap">Timeline:</div>
+      <div class="w-full">
+        <mat-slider class="w-full" min="0" max="{{simulation?.stepCount}}" step="1" showTickMarks discrete color="primary" [value]="simulation?.stepCount" (valueChange)="colorStep($event)">
+          <input matSliderThumb>
+        </mat-slider>
+      </div>
+      <!--<div class="bg-gray-100 p-2 rounded block" *ngFor="let s of simulationResult" (click)="colorStep(s)">{{s.step}}</div>-->
+    </div>
+</div>
+
+<div class="absolute mt-96 ml-4 w-96 bg-white p-4 rounded">
+  <div>Simulation Campaign</div>
+  <div class="flex flex-col" [formGroup]="formGroup2">
+    <mat-form-field appearance="standard">
+      <mat-label>Node Count</mat-label>
+      <input matInput type="number" placeholder="Node Count" max="10000000" autocomplete="off" formControlName="amount">
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Information Spreading Technique</mat-label>
+      <mat-select formControlName="informationMethod">
+        <mat-option *ngFor="let option of typeSelectOption" [value]="option.key">
+          {{option.value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Retries</mat-label>
+      <input matInput type="number" placeholder="Node Count" max="10000000" autocomplete="off" formControlName="tries">
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="onStartCampaign()" [disabled]="!formGroup2.valid || campaignRunning">Start Simulation Campaign</button>
+  </div>
+  <div class=" p-4" *ngIf="!campaignRunning">
+    <div class="flex flex-col">
+      <div class="flex flex-col">
+        <div>
+          AVG Steps: {{currentCampaignResult?.avgSteps}}
+        </div>
+        <div>
+          AVG Time: {{currentCampaignResult?.avgTime}}
+        </div>
+    </div>
+    <!--<div class="bg-gray-100 p-2 rounded block" *ngFor="let s of simulationResult" (click)="colorStep(s)">{{s.step}}</div>-->
+    </div>
+    <mat-spinner *ngIf="campaignRunning"></mat-spinner>
+  </div>
+
+</div>
+
+
+<!-- simulation -->
+<div #svgContainer class="w-full h-full bg-gray-100 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100">
+  <figure id="network"></figure>
+</div>
